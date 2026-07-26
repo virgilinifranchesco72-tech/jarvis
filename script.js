@@ -426,24 +426,6 @@ return true;
 
 
 
-if(texto.includes("hora")){
-
-
-let hora =
-new Date().toLocaleTimeString("es-AR");
-
-
-
-hablar(
-"La hora actual es " + hora + ", señor."
-);
-
-
-
-return true;
-
-
-}
 
 
 
