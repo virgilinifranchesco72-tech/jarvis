@@ -47,17 +47,15 @@ window.SpeechRecognition ||
 window.webkitSpeechRecognition;
 
 
+const reconocimiento = SpeechRecognition ? new SpeechRecognition() : {
+    start(){}, stop(){}, abort(){}, onstart:null, onend:null, onerror:null, onresult:null
+};
+
 if(!SpeechRecognition){
-
-    estado.textContent =
-    "Este navegador no soporta reconocimiento de voz.";
-
-    throw new Error("SpeechRecognition no disponible");
-
+    estado.textContent = "Estado: Usá el comando escrito; este navegador no ofrece micrófono web.";
+    if (boton) boton.disabled = true;
+    if (voiceStatus) voiceStatus.textContent = "UNAVAILABLE";
 }
-
-
-const reconocimiento = new SpeechRecognition();
 
 
 reconocimiento.lang = "es-AR";
@@ -440,6 +438,18 @@ estado.textContent =
 
 
 // ======================================
+const comandoTexto = document.getElementById("comando-texto");
+const enviarComando = document.getElementById("enviar-comando");
+function enviarTextoComoComando(){
+    const texto = comandoTexto?.value.trim();
+    if (!texto) return;
+    if (usuario) usuario.textContent = texto;
+    if (reconocimiento.onresult) reconocimiento.onresult({ results: [[{ transcript: texto }]] });
+    if (comandoTexto) comandoTexto.value = "";
+}
+enviarComando?.addEventListener("click", enviarTextoComoComando);
+comandoTexto?.addEventListener("keydown", evento => { if (evento.key === "Enter") enviarTextoComoComando(); });
+
 // FIN PARTE 3
 // ======================================
 
