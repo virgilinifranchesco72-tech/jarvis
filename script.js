@@ -34,6 +34,9 @@ const memoryStatus = document.getElementById("memory-status");
 const memoryMeter = document.getElementById("memory-meter");
 const cambiarModelo = document.getElementById("cambiar-modelo");
 const modeloActual = document.getElementById("modelo-actual");
+const limpiarMemoria = document.getElementById("limpiar-memoria");
+const exportarDatos = document.getElementById("exportar-datos");
+const reiniciarJarvis = document.getElementById("reiniciar-jarvis");
 if (localStorage.getItem("JARVIS_MODELO_VERSION") !== "3.5-flash-lite") {
     localStorage.setItem("JARVIS_MODELO", "gemini-3.5-flash-lite");
     localStorage.setItem("JARVIS_MODELO_VERSION", "3.5-flash-lite");
@@ -217,6 +220,34 @@ cambiarModelo?.addEventListener("click", () => {
     localStorage.setItem("JARVIS_MODELO", modeloGemini);
     if (modeloActual) modeloActual.textContent = modeloGemini.replace("gemini-", "").toUpperCase();
     estado.textContent = "Estado: Modelo actualizado. Reiniciá la app para aplicar.";
+});
+
+limpiarMemoria?.addEventListener("click", () => {
+    if (!confirm("¿Borrar toda la memoria guardada?")) return;
+    memoria = [];
+    localStorage.removeItem("JARVIS_MEMORIA");
+    actualizarMemoriaUI();
+    estado.textContent = "Estado: Memoria borrada.";
+});
+
+exportarDatos?.addEventListener("click", () => {
+    const respaldo = { memoria, conversacion, modelo: modeloGemini, exportado: new Date().toISOString() };
+    const archivo = new Blob([JSON.stringify(respaldo, null, 2)], { type: "application/json" });
+    const enlace = document.createElement("a");
+    enlace.href = URL.createObjectURL(archivo);
+    enlace.download = "jarvis-respaldo.json";
+    enlace.click();
+    URL.revokeObjectURL(enlace.href);
+    estado.textContent = "Estado: Respaldo exportado.";
+});
+
+reiniciarJarvis?.addEventListener("click", () => {
+    if (!confirm("¿Reiniciar la configuración local de JARVIS?")) return;
+    localStorage.removeItem("JARVIS_CONTEXTO");
+    localStorage.removeItem("JARVIS_MEMORIA");
+    localStorage.removeItem("JARVIS_MODELO");
+    localStorage.removeItem("JARVIS_MODELO_VERSION");
+    location.reload();
 });
 
 detener?.addEventListener("click", () => {
