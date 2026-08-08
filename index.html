@@ -2,30 +2,43 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JARVIS</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#030812">
+    <title>JARVIS // COMMAND CENTER</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <main class="app-shell">
+        <header class="topbar">
+            <div class="brand"><span class="brand-mark">✦</span><div><strong>JARVIS</strong><small>COMMAND CENTER</small></div></div>
+            <div class="system-state"><span class="status-dot"></span><span id="connection">ONLINE</span></div>
+        </header>
 
-    <h1>JARVIS</h1>
+        <section class="hero-panel">
+            <div class="hero-meta"><span>CORE SYSTEM</span><span>v2.0.26</span></div>
+            <div class="core-stage" id="core-stage">
+                <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="orbit orbit-three"></div>
+                <div id="core"><span class="core-symbol">J</span><span class="core-ring"></span></div>
+                <div class="scan-line"></div>
+            </div>
+            <div class="core-label"><b id="estado">Estado: Esperando...</b><span>VOICE INTERFACE READY</span></div>
+        </section>
 
-    <div id="core"></div>
+        <section class="telemetry-grid">
+            <article class="hud-card"><div class="card-title"><span class="tiny-icon">◈</span> PERSONALIDAD</div><strong id="persona">FORMAL</strong><div class="meter"><i style="width:82%"></i></div><small>NEURAL PROFILE ACTIVE</small></article>
+            <article class="hud-card"><div class="card-title"><span class="tiny-icon">◉</span> SYSTEM LOAD</div><strong>24<span>%</span></strong><div class="meter"><i style="width:24%"></i></div><small>ALL SYSTEMS NOMINAL</small></article>
+        </section>
 
-    <p id="estado">Estado: Esperando...</p>
+        <section class="chat-panel">
+            <div class="chat-head"><span>LIVE TRANSCRIPT</span><span class="live-pill">● LIVE</span></div>
+            <div class="message user-message"><span class="message-tag">YOU</span><p id="usuario">Esperando comando...</p></div>
+            <div class="message jarvis-message"><span class="message-tag">JARVIS</span><p id="jarvis">Sistema en línea. Diga “Jarvis” para activarme.</p></div>
+        </section>
 
-    <div class="chat">
-        <p><strong>Tú:</strong></p>
-        <p id="usuario">...</p>
+        <button id="hablar" class="voice-button" aria-label="Hablar con Jarvis"><span class="mic-icon">♩</span><span>TAP TO SPEAK</span><i></i></button>
 
-        <p><strong>Jarvis:</strong></p>
-        <p id="jarvis">Hola señor.</p>
-    </div>
-
-    <button id="hablar">🎤 Hablar</button>
-
+        <footer><span>SECURE LOCAL SESSION</span><span>◆</span><span>BUENOS AIRES, AR</span></footer>
+    </main>
     <script src="script.js"></script>
-
 </body>
 </html>
