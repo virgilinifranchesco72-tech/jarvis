@@ -53,6 +53,7 @@ reconocimiento.lang = "es-AR";
 reconocimiento.interimResults = false;
 reconocimiento.continuous = true;
 let escuchaManosLibres = false;
+let jarvisHablando = false;
 
 
 
@@ -121,12 +122,22 @@ function hablar(texto){
 
 
     voz.onstart = () => {
+        jarvisHablando = true;
+        if (escuchaManosLibres) {
+            try { reconocimiento.stop(); } catch (error) { /* ya estaba detenido */ }
+        }
         waveform.classList.add("active");
         if (voiceStatus) voiceStatus.textContent = "SPEAKING";
     };
     voz.onend = () => {
+        jarvisHablando = false;
         waveform.classList.remove("active");
         if (voiceStatus) voiceStatus.textContent = "READY";
+        if (escuchaManosLibres) {
+            setTimeout(() => {
+                try { reconocimiento.start(); } catch (error) { /* ya está escuchando */ }
+            }, 300);
+        }
     };
     speechSynthesis.speak(voz);
 
@@ -254,9 +265,11 @@ ${pregunta}
 reconocimiento.onend = () => {
     waveform.classList.remove("active");
     if (voiceStatus) voiceStatus.textContent = "READY";
-    if (escuchaManosLibres) {
+    if (escuchaManosLibres && !jarvisHablando) {
         setTimeout(() => {
-            try { reconocimiento.start(); } catch (error) { /* ya está escuchando */ }
+            if (!jarvisHablando) {
+                try { reconocimiento.start(); } catch (error) { /* ya está escuchando */ }
+            }
         }, 250);
     }
 };
