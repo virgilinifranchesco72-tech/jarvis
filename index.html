@@ -47,6 +47,9 @@
                 <label>TONO<input id="voice-pitch" type="range" min="0.7" max="1.3" step="0.01" value="1.02"><output id="pitch-value">1.02</output></label>
                 <button id="clear-history" class="mini-button">LIMPIAR HISTORIAL</button>
                 <button id="cambiar-modelo" class="mini-button">MODELO: <span id="modelo-actual">3.5-FLASH-LITE</span></button>
+                <button id="limpiar-memoria" class="mini-button">BORRAR MEMORIA</button>
+                <button id="exportar-datos" class="mini-button">EXPORTAR DATOS</button>
+                <button id="reiniciar-jarvis" class="mini-button">REINICIAR JARVIS</button>
             </div>
         </section>
 
@@ -70,7 +73,7 @@
 
         <footer><span>SECURE LOCAL SESSION</span><span>◆</span><span>BUENOS AIRES, AR</span></footer>
     </main>
-    <script src="script.js?v=8"></script>
+    <script src="script.js?v=9"></script>
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
