@@ -1,9 +1,9 @@
-const CACHE = "jarvis-shell-v2";
+const CACHE = "jarvis-shell-v3";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./style.css",
-  "./script.js?v=6",
+  "./script.js?v=7",
   "./manifest.json",
   "./icons/jarvis-192.png",
   "./icons/jarvis-512.png"
