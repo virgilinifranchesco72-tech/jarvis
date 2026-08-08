@@ -104,6 +104,10 @@ function textoParaVoz(texto){
 
 function hablar(texto){
 
+    jarvisHablando = true;
+    if (escuchaManosLibres) {
+        try { reconocimiento.stop(); } catch (error) { /* ya estaba detenido */ }
+    }
     speechSynthesis.cancel();
 
 
@@ -277,6 +281,7 @@ reconocimiento.onend = () => {
 
 reconocimiento.onresult = async(evento)=>{
 
+if (jarvisHablando) return;
 
 let texto =
 evento.results[0][0].transcript;
