@@ -20,6 +20,7 @@ const usuario = document.getElementById("usuario");
 const jarvis = document.getElementById("jarvis");
 const estado = document.getElementById("estado");
 const waveform = document.getElementById("waveform");
+const voiceStatus = document.getElementById("voice-status");
 
 
 const SpeechRecognition =
@@ -110,8 +111,14 @@ function hablar(texto){
     jarvis.textContent = texto;
 
 
-    voz.onstart = () => waveform.classList.add("active");
-    voz.onend = () => waveform.classList.remove("active");
+    voz.onstart = () => {
+        waveform.classList.add("active");
+        if (voiceStatus) voiceStatus.textContent = "SPEAKING";
+    };
+    voz.onend = () => {
+        waveform.classList.remove("active");
+        if (voiceStatus) voiceStatus.textContent = "READY";
+    };
     speechSynthesis.speak(voz);
 
 }
@@ -124,6 +131,7 @@ boton.addEventListener("click",()=>{
     estado.textContent =
     "Estado: Escuchando...";
     waveform.classList.add("active");
+    if (voiceStatus) voiceStatus.textContent = "LISTENING";
 
 
     reconocimiento.start();
@@ -206,7 +214,10 @@ ${pregunta}
 // ======================================
 
 
-reconocimiento.onend = () => waveform.classList.remove("active");
+reconocimiento.onend = () => {
+    waveform.classList.remove("active");
+    if (voiceStatus) voiceStatus.textContent = "READY";
+};
 
 
 reconocimiento.onresult = async(evento)=>{
