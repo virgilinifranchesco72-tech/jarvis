@@ -66,10 +66,11 @@
         </div>
         <button id="hablar" class="voice-button" aria-label="Hablar con Jarvis"><span class="mic-icon">♩</span><span>TAP TO SPEAK</span><i></i></button>
         <button id="detener" class="stop-button" aria-label="Detener a Jarvis">■ DETENER RESPUESTA</button>
+        <div class="text-command"><input id="comando-texto" type="text" placeholder="Escribí un comando si el micrófono no responde"><button id="enviar-comando">ENVIAR</button></div>
 
         <footer><span>SECURE LOCAL SESSION</span><span>◆</span><span>BUENOS AIRES, AR</span></footer>
     </main>
-    <script src="script.js?v=7"></script>
+    <script src="script.js?v=8"></script>
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
