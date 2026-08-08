@@ -160,7 +160,7 @@ function agregarAlHistorial(texto){
 
 personalitySelect?.addEventListener("change", () => {
     personalidad = personalitySelect.value;
-    const nombres = { formal: "FORMAL", sarcastico: "SARCASTIC", amigable: "FRIENDLY", misterioso: "MYSTERIOUS" };
+    const nombres = { directo: "DIRECT JARVIS", formal: "FORMAL", sarcastico: "SARCASTIC", amigable: "FRIENDLY", misterioso: "MYSTERIOUS" };
     const persona = document.getElementById("persona");
     if (persona) persona.textContent = nombres[personalidad];
     hablar("Personalidad actualizada, señor.");
@@ -186,6 +186,7 @@ clearHistory?.addEventListener("click", () => {
 async function preguntarGemini(pregunta){
 
     const perfiles = {
+        directo: `Eres JARVIS en su versión real: directo, preciso, inteligente y eficiente. No uses frases exageradas, no hagas chistes innecesarios y ve al punto. Llama al usuario "señor" cuando sea natural.`,
         formal: `Eres JARVIS, un asistente inspirado en Iron Man. Hablas de forma seria, elegante y profesional. Llama al usuario "señor".`,
         sarcastico: `Eres JARVIS, pero con un humor sarcástico e irónico. Siempre respondes con alguna pulla o comentario ácido, pero igual ayudas. Llama al usuario "señor".`,
         amigable: `Eres JARVIS, muy amigable, entusiasta y positivo. Usas un tono cálido y cercano. Llama al usuario "señor".`,
