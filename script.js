@@ -21,6 +21,14 @@ const jarvis = document.getElementById("jarvis");
 const estado = document.getElementById("estado");
 const waveform = document.getElementById("waveform");
 const voiceStatus = document.getElementById("voice-status");
+const personalitySelect = document.getElementById("personality-select");
+const voiceRate = document.getElementById("voice-rate");
+const voicePitch = document.getElementById("voice-pitch");
+const rateValue = document.getElementById("rate-value");
+const pitchValue = document.getElementById("pitch-value");
+const historyList = document.getElementById("history-list");
+const historyCount = document.getElementById("history-count");
+const clearHistory = document.getElementById("clear-history");
 
 
 const SpeechRecognition =
@@ -103,8 +111,8 @@ function hablar(texto){
 
     if (vozNatural) voz.voice = vozNatural;
     voz.lang = vozNatural?.lang || "es-AR";
-    voz.rate = 0.94;
-    voz.pitch = 1.02;
+    voz.rate = Number(voiceRate?.value || 0.94);
+    voz.pitch = Number(voicePitch?.value || 1.02);
     voz.volume = 1;
 
 
@@ -137,6 +145,32 @@ boton.addEventListener("click",()=>{
     reconocimiento.start();
 
 
+});
+
+function agregarAlHistorial(texto){
+    if (!historyList) return;
+    const vacio = historyList.querySelector(".empty-history");
+    if (vacio) vacio.remove();
+    const item = document.createElement("li");
+    item.textContent = texto;
+    historyList.prepend(item);
+    while (historyList.children.length > 8) historyList.lastElementChild.remove();
+    if (historyCount) historyCount.textContent = historyList.children.length + " COMMANDS";
+}
+
+personalitySelect?.addEventListener("change", () => {
+    personalidad = personalitySelect.value;
+    const nombres = { formal: "FORMAL", sarcastico: "SARCASTIC", amigable: "FRIENDLY", misterioso: "MYSTERIOUS" };
+    const persona = document.getElementById("persona");
+    if (persona) persona.textContent = nombres[personalidad];
+    hablar("Personalidad actualizada, señor.");
+});
+
+voiceRate?.addEventListener("input", () => { if (rateValue) rateValue.textContent = voiceRate.value; });
+voicePitch?.addEventListener("input", () => { if (pitchValue) pitchValue.textContent = voicePitch.value; });
+clearHistory?.addEventListener("click", () => {
+    historyList.innerHTML = '<li class="empty-history">Todavía no hay comandos.</li>';
+    if (historyCount) historyCount.textContent = "0 COMMANDS";
 });
 
 
@@ -230,6 +264,7 @@ evento.results[0][0].transcript;
 
 usuario.textContent =
 texto;
+agregarAlHistorial(texto);
 
 
 
