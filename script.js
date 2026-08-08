@@ -58,12 +58,44 @@ function obtenerVozNatural(){
 
 speechSynthesis.onvoiceschanged = () => obtenerVozNatural();
 
+function numeroEnPalabras(numero){
+    const unidades = ["cero", "uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve"];
+    const especiales = ["diez", "once", "doce", "trece", "catorce", "quince", "dieciséis", "diecisiete", "dieciocho", "diecinueve", "veinte"];
+    const decenas = ["", "", "veinte", "treinta", "cuarenta", "cincuenta", "sesenta", "setenta", "ochenta", "noventa"];
+    const centenas = ["", "ciento", "doscientos", "trescientos", "cuatrocientos", "quinientos", "seiscientos", "setecientos", "ochocientos", "novecientos"];
+    numero = Number(numero);
+    if (!Number.isFinite(numero)) return String(numero);
+    if (numero < 10) return unidades[numero];
+    if (numero <= 20) return especiales[numero - 10];
+    if (numero < 30) return "veinti" + unidades[numero - 20];
+    if (numero < 100) return decenas[Math.floor(numero / 10)] + (numero % 10 ? " y " + unidades[numero % 10] : "");
+    if (numero === 100) return "cien";
+    if (numero < 1000) return centenas[Math.floor(numero / 100)] + (numero % 100 ? " " + numeroEnPalabras(numero % 100) : "");
+    if (numero < 1000000) {
+        const miles = Math.floor(numero / 1000);
+        return (miles === 1 ? "mil" : numeroEnPalabras(miles) + " mil") + (numero % 1000 ? " " + numeroEnPalabras(numero % 1000) : "");
+    }
+    if (numero < 1000000000) {
+        const millones = Math.floor(numero / 1000000);
+        return (millones === 1 ? "un millón" : numeroEnPalabras(millones) + " millones") + (numero % 1000000 ? " " + numeroEnPalabras(numero % 1000000) : "");
+    }
+    return String(numero);
+}
+
+function textoParaVoz(texto){
+    return texto.replace(/\b\d{1,3}(?:[.,]\d{3})+\b|\b\d+\b/g, coincidencia => {
+        const numero = coincidencia.replace(/[.,]/g, "");
+        return numeroEnPalabras(numero);
+    });
+}
+
 function hablar(texto){
 
     speechSynthesis.cancel();
 
 
-    const voz = new SpeechSynthesisUtterance(texto);
+    const textoHablado = textoParaVoz(texto);
+    const voz = new SpeechSynthesisUtterance(textoHablado);
     const vozNatural = obtenerVozNatural();
 
     if (vozNatural) voz.voice = vozNatural;
