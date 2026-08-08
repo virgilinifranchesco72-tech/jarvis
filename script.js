@@ -55,6 +55,10 @@ reconocimiento.continuous = true;
 let escuchaManosLibres = false;
 let jarvisHablando = false;
 let ignorarMicrofonoHasta = 0;
+let reconocimientoEnCurso = false;
+let microfonoBloqueado = false;
+let ultimoTexto = "";
+let ultimoTextoEn = 0;
 
 
 
@@ -163,7 +167,10 @@ boton.addEventListener("click",()=>{
 
 
     escuchaManosLibres = true;
-    reconocimiento.start();
+    microfonoBloqueado = false;
+    if (!reconocimientoEnCurso) {
+        try { reconocimiento.start(); } catch (error) { /* ya está escuchando */ }
+    }
 
 
 });
@@ -270,16 +277,30 @@ ${pregunta}
 // ======================================
 
 
+reconocimiento.onstart = () => {
+    reconocimientoEnCurso = true;
+};
+
 reconocimiento.onend = () => {
+    reconocimientoEnCurso = false;
     waveform.classList.remove("active");
     if (voiceStatus) voiceStatus.textContent = "READY";
     if (escuchaManosLibres && !jarvisHablando) {
         const espera = Math.max(250, ignorarMicrofonoHasta - Date.now());
         setTimeout(() => {
-            if (!jarvisHablando && Date.now() >= ignorarMicrofonoHasta) {
-                try { reconocimiento.start(); } catch (error) { /* ya está escuchando */ }
+            if (!microfonoBloqueado && !jarvisHablando && !reconocimientoEnCurso && Date.now() >= ignorarMicrofonoHasta) {
+                try { reconocimiento.start(); } catch (error) { /* el navegador ya lo inició */ }
             }
         }, espera);
+    }
+};
+
+reconocimiento.onerror = (evento) => {
+    reconocimientoEnCurso = false;
+    if (evento.error === "not-allowed" || evento.error === "service-not-allowed") {
+        microfonoBloqueado = true;
+        escuchaManosLibres = false;
+        estado.textContent = "Estado: Micrófono bloqueado.";
     }
 };
 
@@ -290,9 +311,14 @@ if (jarvisHablando || Date.now() < ignorarMicrofonoHasta || speechSynthesis.spea
 
 let texto =
 evento.results[0][0].transcript;
-const textoOriginal = texto;
+const textoOriginal = texto.trim();
+const textoNormalizado = textoOriginal.toLowerCase();
+if (!textoOriginal || textoOriginal.length > 500) return;
+if (textoNormalizado === ultimoTexto && Date.now() - ultimoTextoEn < 2500) return;
+ultimoTexto = textoNormalizado;
+ultimoTextoEn = Date.now();
 
-if (!jarvisActivo && texto.toLowerCase().includes("jarvis")) {
+if (!jarvisActivo && textoNormalizado.includes("jarvis")) {
     jarvisActivo = true;
     texto = texto.replace(/jarvis/i, "").trim();
     estado.textContent = "Estado: Activo.";
