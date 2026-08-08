@@ -34,7 +34,11 @@ const memoryStatus = document.getElementById("memory-status");
 const memoryMeter = document.getElementById("memory-meter");
 const cambiarModelo = document.getElementById("cambiar-modelo");
 const modeloActual = document.getElementById("modelo-actual");
-let modeloGemini = localStorage.getItem("JARVIS_MODELO") || "gemini-3-flash-preview";
+if (localStorage.getItem("JARVIS_MODELO_VERSION") !== "3.5-flash-lite") {
+    localStorage.setItem("JARVIS_MODELO", "gemini-3.5-flash-lite");
+    localStorage.setItem("JARVIS_MODELO_VERSION", "3.5-flash-lite");
+}
+let modeloGemini = localStorage.getItem("JARVIS_MODELO") || "gemini-3.5-flash-lite";
 if (modeloActual) modeloActual.textContent = modeloGemini.replace("gemini-", "").toUpperCase();
 
 
