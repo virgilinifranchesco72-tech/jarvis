@@ -29,6 +29,9 @@ const pitchValue = document.getElementById("pitch-value");
 const historyList = document.getElementById("history-list");
 const historyCount = document.getElementById("history-count");
 const clearHistory = document.getElementById("clear-history");
+const detener = document.getElementById("detener");
+const memoryStatus = document.getElementById("memory-status");
+const memoryMeter = document.getElementById("memory-meter");
 
 
 const SpeechRecognition =
@@ -188,7 +191,7 @@ function agregarAlHistorial(texto){
 
 personalitySelect?.addEventListener("change", () => {
     personalidad = personalitySelect.value;
-    const nombres = { directo: "DIRECT JARVIS", formal: "FORMAL", sarcastico: "SARCASTIC", amigable: "FRIENDLY", misterioso: "MYSTERIOUS" };
+    const nombres = { directo: "DIRECT JARVIS", formal: "FORMAL", sarcastico: "SARCASTIC", amigable: "FRIENDLY", misterioso: "MYSTERIOUS", urgente: "URGENT" };
     const persona = document.getElementById("persona");
     if (persona) persona.textContent = nombres[personalidad];
     hablar("Personalidad actualizada, señor.");
@@ -199,6 +202,16 @@ voicePitch?.addEventListener("input", () => { if (pitchValue) pitchValue.textCon
 clearHistory?.addEventListener("click", () => {
     historyList.innerHTML = '<li class="empty-history">Todavía no hay comandos.</li>';
     if (historyCount) historyCount.textContent = "0 COMMANDS";
+});
+
+detener?.addEventListener("click", () => {
+    speechSynthesis.cancel();
+    jarvisHablando = false;
+    ignorarMicrofonoHasta = Date.now() + 1000;
+    try { reconocimiento.abort(); } catch (error) { /* ya estaba detenido */ }
+    estado.textContent = "Estado: Interrumpido.";
+    if (voiceStatus) voiceStatus.textContent = "READY";
+    if (escuchaManosLibres) setTimeout(() => { try { reconocimiento.start(); } catch (error) {} }, 1100);
 });
 
 
@@ -214,6 +227,7 @@ clearHistory?.addEventListener("click", () => {
 async function preguntarGemini(pregunta){
 
     const perfiles = {
+        urgente: `Eres JARVIS en modo urgente: responde en frases muy cortas, firmes y accionables. Prioriza seguridad, datos confirmados y el siguiente paso. Sin humor ni adornos. Llama al usuario "señor" cuando sea natural.`,
         directo: `Eres JARVIS, como un asistente personal británico de una película: directo, preciso, elegante, inteligente y eficiente. Responde al punto, pero agrega chistes sutiles, ingeniosos y un sarcasmo fino cuando encaje. Habla con seguridad y naturalidad; nunca seas pesado ni exagerado. Llama al usuario "señor" cuando sea natural.`, 
         formal: `Eres JARVIS en modo formal: un asistente personal elegante, serio, británico y profesional. Respondes con precisión, educación y un toque de humor fino cuando encaje. Llama al usuario "señor".`,
         sarcastico: `Eres JARVIS en modo sarcástico: mantén tu elegancia, inteligencia y eficiencia, pero agrega comentarios irónicos y chistes secos con estilo británico. Nunca dejes de ayudar y no seas ofensivo. Llama al usuario "señor".`,
@@ -234,6 +248,12 @@ REGLAS DE COMPORTAMIENTO:
 - No inventes datos, acciones realizadas ni capacidades.
 - Escribe números de forma clara; la interfaz los convertirá a palabras al hablar.
 - Responde siempre en español argentino neutral, con un registro elegante.
+
+Contexto reciente:
+${conversacion.slice(-6).map(turno => `${turno.rol}: ${turno.texto}`).join("\n") || "Sin conversación previa."}
+
+Memoria autorizada:
+${memoria.join("; ") || "Ninguna."}
 
 Pregunta:
 ${pregunta}
@@ -362,7 +382,10 @@ try{
 const respuesta =
 await preguntarGemini(texto);
 
-
+conversacion.push({ rol: "usuario", texto });
+conversacion.push({ rol: "jarvis", texto: respuesta });
+conversacion = conversacion.slice(-12);
+localStorage.setItem("JARVIS_CONTEXTO", JSON.stringify(conversacion));
 
 hablar(respuesta);
 
@@ -409,7 +432,14 @@ estado.textContent =
 // ======================================
 
 
-let memoria = [];
+let memoria = JSON.parse(localStorage.getItem("JARVIS_MEMORIA") || "[]");
+let conversacion = JSON.parse(localStorage.getItem("JARVIS_CONTEXTO") || "[]");
+
+function actualizarMemoriaUI(){
+    if (memoryStatus) memoryStatus.textContent = memoria.length ? memoria.length + " ITEMS" : "READY";
+    if (memoryMeter) memoryMeter.style.width = Math.min(100, memoria.length * 5) + "%";
+}
+actualizarMemoriaUI();
 
 let jarvisActivo = false;
 let personalidad = "directo";
@@ -419,7 +449,7 @@ let personalidad = "directo";
 function guardarMemoria(dato){
 
 
-memoria.push(dato);
+memoria.push(dato.trim());
 
 
 
@@ -428,6 +458,9 @@ if(memoria.length > 20){
 memoria.shift();
 
 }
+
+localStorage.setItem("JARVIS_MEMORIA", JSON.stringify(memoria));
+actualizarMemoriaUI();
 
 
 }
