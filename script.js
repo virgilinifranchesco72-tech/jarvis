@@ -51,7 +51,8 @@ const reconocimiento = new SpeechRecognition();
 
 reconocimiento.lang = "es-AR";
 reconocimiento.interimResults = false;
-reconocimiento.continuous = false;
+reconocimiento.continuous = true;
+let escuchaManosLibres = false;
 
 
 
@@ -142,6 +143,7 @@ boton.addEventListener("click",()=>{
     if (voiceStatus) voiceStatus.textContent = "LISTENING";
 
 
+    escuchaManosLibres = true;
     reconocimiento.start();
 
 
@@ -252,20 +254,34 @@ ${pregunta}
 reconocimiento.onend = () => {
     waveform.classList.remove("active");
     if (voiceStatus) voiceStatus.textContent = "READY";
+    if (escuchaManosLibres) {
+        setTimeout(() => {
+            try { reconocimiento.start(); } catch (error) { /* ya está escuchando */ }
+        }, 250);
+    }
 };
 
 
 reconocimiento.onresult = async(evento)=>{
 
 
-const texto =
+let texto =
 evento.results[0][0].transcript;
+const textoOriginal = texto;
 
-
+if (!jarvisActivo && texto.toLowerCase().includes("jarvis")) {
+    jarvisActivo = true;
+    texto = texto.replace(/jarvis/i, "").trim();
+    estado.textContent = "Estado: Activo.";
+    if (!texto) {
+        hablar("A sus órdenes, señor.");
+        return;
+    }
+}
 
 usuario.textContent =
-texto;
-agregarAlHistorial(texto);
+textoOriginal;
+agregarAlHistorial(textoOriginal);
 
 
 
