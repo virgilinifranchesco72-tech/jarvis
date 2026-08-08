@@ -54,6 +54,7 @@ reconocimiento.interimResults = false;
 reconocimiento.continuous = true;
 let escuchaManosLibres = false;
 let jarvisHablando = false;
+let ignorarMicrofonoHasta = 0;
 
 
 
@@ -137,10 +138,13 @@ function hablar(texto){
         jarvisHablando = false;
         waveform.classList.remove("active");
         if (voiceStatus) voiceStatus.textContent = "READY";
+        ignorarMicrofonoHasta = Date.now() + 1500;
         if (escuchaManosLibres) {
             setTimeout(() => {
-                try { reconocimiento.start(); } catch (error) { /* ya está escuchando */ }
-            }, 300);
+                if (!jarvisHablando && Date.now() >= ignorarMicrofonoHasta) {
+                    try { reconocimiento.start(); } catch (error) { /* ya está escuchando */ }
+                }
+            }, 1600);
         }
     };
     speechSynthesis.speak(voz);
@@ -270,18 +274,19 @@ reconocimiento.onend = () => {
     waveform.classList.remove("active");
     if (voiceStatus) voiceStatus.textContent = "READY";
     if (escuchaManosLibres && !jarvisHablando) {
+        const espera = Math.max(250, ignorarMicrofonoHasta - Date.now());
         setTimeout(() => {
-            if (!jarvisHablando) {
+            if (!jarvisHablando && Date.now() >= ignorarMicrofonoHasta) {
                 try { reconocimiento.start(); } catch (error) { /* ya está escuchando */ }
             }
-        }, 250);
+        }, espera);
     }
 };
 
 
 reconocimiento.onresult = async(evento)=>{
 
-if (jarvisHablando) return;
+if (jarvisHablando || Date.now() < ignorarMicrofonoHasta || speechSynthesis.speaking) return;
 
 let texto =
 evento.results[0][0].transcript;
