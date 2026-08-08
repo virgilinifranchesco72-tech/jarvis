@@ -32,6 +32,10 @@ const clearHistory = document.getElementById("clear-history");
 const detener = document.getElementById("detener");
 const memoryStatus = document.getElementById("memory-status");
 const memoryMeter = document.getElementById("memory-meter");
+const cambiarModelo = document.getElementById("cambiar-modelo");
+const modeloActual = document.getElementById("modelo-actual");
+let modeloGemini = localStorage.getItem("JARVIS_MODELO") || "gemini-3-flash-preview";
+if (modeloActual) modeloActual.textContent = modeloGemini.replace("gemini-", "").toUpperCase();
 
 
 const SpeechRecognition =
@@ -204,6 +208,15 @@ clearHistory?.addEventListener("click", () => {
     if (historyCount) historyCount.textContent = "0 COMMANDS";
 });
 
+cambiarModelo?.addEventListener("click", () => {
+    const nuevo = prompt("Escribí el identificador del modelo Gemini, por ejemplo: gemini-3-flash-preview", modeloGemini);
+    if (!nuevo || !nuevo.trim()) return;
+    modeloGemini = nuevo.trim().replace(/^models\\//, "");
+    localStorage.setItem("JARVIS_MODELO", modeloGemini);
+    if (modeloActual) modeloActual.textContent = modeloGemini.replace("gemini-", "").toUpperCase();
+    estado.textContent = "Estado: Modelo actualizado. Reiniciá la app para aplicar.";
+});
+
 detener?.addEventListener("click", () => {
     speechSynthesis.cancel();
     jarvisHablando = false;
@@ -260,7 +273,7 @@ ${pregunta}
 `;
 
     const respuesta = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${API_KEY}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(modeloGemini)}:generateContent?key=${API_KEY}`,
         {
             method: "POST",
             headers: {
