@@ -83,10 +83,12 @@ function numeroEnPalabras(numero){
 }
 
 function textoParaVoz(texto){
-    return texto.replace(/\b\d{1,3}(?:[.,]\d{3})+\b|\b\d+\b/g, coincidencia => {
-        const numero = coincidencia.replace(/[.,]/g, "");
-        return numeroEnPalabras(numero);
-    });
+    return texto
+        .replace(/\*/g, "")
+        .replace(/\b\d{1,3}(?:[.,]\d{3})+\b|\b\d+\b/g, coincidencia => {
+            const numero = coincidencia.replace(/[.,]/g, "");
+            return numeroEnPalabras(numero);
+        });
 }
 
 function hablar(texto){
