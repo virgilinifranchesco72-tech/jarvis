@@ -31,6 +31,23 @@
             <article class="hud-card"><div class="card-title"><span class="tiny-icon">◇</span> SEGURIDAD</div><strong>SECURE</strong><div class="meter"><i style="width:100%"></i></div><small>API KEY NOT STORED ONLINE</small></article>
         </section>
 
+        <section class="control-panel">
+            <div class="control-heading"><span>JARVIS CONTROLS</span><span class="live-pill">CONFIG</span></div>
+            <div class="control-row">
+                <label>PERSONALIDAD<select id="personality-select"><option value="formal">Formal</option><option value="sarcastico">Sarcástico</option><option value="amigable">Amigable</option><option value="misterioso">Misterioso</option></select></label>
+                <label>VELOCIDAD<input id="voice-rate" type="range" min="0.7" max="1.2" step="0.01" value="0.94"><output id="rate-value">0.94</output></label>
+            </div>
+            <div class="control-row second-row">
+                <label>TONO<input id="voice-pitch" type="range" min="0.7" max="1.3" step="0.01" value="1.02"><output id="pitch-value">1.02</output></label>
+                <button id="clear-history" class="mini-button">LIMPIAR HISTORIAL</button>
+            </div>
+        </section>
+
+        <section class="history-panel">
+            <div class="chat-head"><span>COMMAND HISTORY</span><span id="history-count">0 COMMANDS</span></div>
+            <ul id="history-list"><li class="empty-history">Todavía no hay comandos.</li></ul>
+        </section>
+
         <section class="chat-panel">
             <div class="chat-head"><span>LIVE TRANSCRIPT</span><span class="live-pill">● LIVE</span></div>
             <div class="message user-message"><span class="message-tag">YOU</span><p id="usuario">Esperando comando...</p></div>
