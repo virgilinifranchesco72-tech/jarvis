@@ -46,18 +46,30 @@ reconocimiento.continuous = false;
 
 
 
+function obtenerVozNatural(){
+    const voces = speechSynthesis.getVoices();
+    const vocesEspanol = voces.filter(voz => voz.lang.toLowerCase().startsWith("es"));
+    const preferidas = ["Google español", "Microsoft Dalia", "Microsoft Jorge", "Paulina", "Mónica", "Monica", "Google español de Estados Unidos"];
+
+    return preferidas.reduce((encontrada, nombre) => {
+        return encontrada || vocesEspanol.find(voz => voz.name.toLowerCase().includes(nombre.toLowerCase()));
+    }, null) || vocesEspanol.find(voz => voz.lang.toLowerCase() === "es-ar") || vocesEspanol[0];
+}
+
+speechSynthesis.onvoiceschanged = () => obtenerVozNatural();
+
 function hablar(texto){
 
     speechSynthesis.cancel();
 
 
-    const voz =
-    new SpeechSynthesisUtterance(texto);
+    const voz = new SpeechSynthesisUtterance(texto);
+    const vozNatural = obtenerVozNatural();
 
-
-    voz.lang = "es-ES";
-    voz.rate = 1;
-    voz.pitch = 1;
+    if (vozNatural) voz.voice = vozNatural;
+    voz.lang = vozNatural?.lang || "es-AR";
+    voz.rate = 0.94;
+    voz.pitch = 1.02;
     voz.volume = 1;
 
 
