@@ -9,15 +9,24 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="VANTA SYSTEM">
     <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icons/vanta-192.png">
+    <link rel="apple-touch-icon" href="icons/jarvis-192.png">
     <title>VANTA SYSTEM // COMMAND CENTER</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="pwa-overrides.css?v=1">
 </head>
 <body>
+    <section id="profile-gate" class="profile-gate">
+      <div class="profile-card">
+        <div class="profile-orb">V</div>
+        <h1>VANTA SYSTEM</h1>
+        <p>Elegí tu perfil para cargar tu VANTA personal.</p>
+        <button data-profile="Fran">ENTRAR COMO FRAN</button>
+        <button data-profile="Angélica">ENTRAR COMO ANGÉLICA</button>
+      </div>
+    </section>
     <main class="app-shell">
         <header class="topbar">
-            <div class="brand"><span class="brand-mark">✦</span><div><strong>VANTA SYSTEM</strong><small>COMMAND CENTER</small></div></div>
+            <div class="brand"><span class="brand-mark">✦</span><div><strong>VANTA SYSTEM</strong><small id="perfil-activo">PERSONAL AI</small></div></div>
             <div class="system-state"><span class="status-dot"></span><span id="connection">ONLINE</span></div>
         </header>
 
@@ -83,7 +92,7 @@
         <nav class="bottom-nav"><button>⌂<small>INICIO</small></button><button id="nav-history">◷<small>HISTORIAL</small></button><button id="nav-command">▣<small>COMANDOS</small></button><button id="nav-profile">♙<small>PERFIL</small></button></nav>
         <footer><span>SECURE LOCAL SESSION</span><span>◆</span><span>BUENOS AIRES, AR</span></footer>
     </main>
-    <script src="script.js?v=11"></script>
+    <script src="script.js?v=12"></script>
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
