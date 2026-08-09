@@ -1,4 +1,4 @@
-const CACHE = "jarvis-shell-v8";
+const CACHE = "vanta-system-v1";
 const APP_SHELL = [
   "./",
   "./index.html",
