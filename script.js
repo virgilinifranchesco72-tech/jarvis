@@ -33,6 +33,7 @@ const detener = document.getElementById("detener");
 const memoryStatus = document.getElementById("memory-status");
 const memoryMeter = document.getElementById("memory-meter");
 const cambiarModelo = document.getElementById("cambiar-modelo");
+const modeloInput = document.getElementById("modelo-input");
 const modeloActual = document.getElementById("modelo-actual");
 const limpiarMemoria = document.getElementById("limpiar-memoria");
 const exportarDatos = document.getElementById("exportar-datos");
@@ -43,6 +44,7 @@ if (localStorage.getItem("JARVIS_MODELO_VERSION") !== "3.5-flash-lite") {
 }
 let modeloGemini = localStorage.getItem("JARVIS_MODELO") || "gemini-3.5-flash-lite";
 if (modeloActual) modeloActual.textContent = modeloGemini.replace("gemini-", "").toUpperCase();
+if (modeloInput) modeloInput.value = modeloGemini;
 
 
 const SpeechRecognition =
@@ -214,12 +216,12 @@ clearHistory?.addEventListener("click", () => {
 });
 
 cambiarModelo?.addEventListener("click", () => {
-    const nuevo = prompt("Escribí el identificador del modelo Gemini, por ejemplo: gemini-3-flash-preview", modeloGemini);
-    if (!nuevo || !nuevo.trim()) return;
-    modeloGemini = nuevo.trim().replace(/^models\\//, "");
+    const nuevo = (modeloInput?.value || "").trim().replace(/^models\//, "");
+    if (!nuevo) { estado.textContent = "Estado: Escribí un modelo válido."; return; }
+    modeloGemini = nuevo;
     localStorage.setItem("JARVIS_MODELO", modeloGemini);
     if (modeloActual) modeloActual.textContent = modeloGemini.replace("gemini-", "").toUpperCase();
-    estado.textContent = "Estado: Modelo actualizado. Reiniciá la app para aplicar.";
+    estado.textContent = "Estado: Modelo guardado.";
 });
 
 limpiarMemoria?.addEventListener("click", () => {
