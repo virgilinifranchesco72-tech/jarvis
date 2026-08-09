@@ -3,12 +3,20 @@
 // PARTE 1 DE 5
 // ======================================
 
-let API_KEY = localStorage.getItem("VANTA SYSTEM_API_KEY");
+const perfilActivo = localStorage.getItem("VANTA_PERFIL") || "Fran";
+const perfilKey = clave => `VANTA_${perfilActivo}_${clave}`;
+const perfilStorage = {
+    getItem: clave => localStorage.getItem(perfilKey(clave)),
+    setItem: (clave, valor) => localStorage.setItem(perfilKey(clave), valor),
+    removeItem: clave => localStorage.removeItem(perfilKey(clave))
+};
+
+let API_KEY = perfilStorage.getItem("VANTA SYSTEM_API_KEY");
 
 if (!API_KEY) {
     API_KEY = prompt("Por favor, ingrese su API Key de Gemini para activar a VANTA SYSTEM:");
     if (API_KEY) {
-        localStorage.setItem("VANTA SYSTEM_API_KEY", API_KEY);
+        perfilStorage.setItem("VANTA SYSTEM_API_KEY", API_KEY);
     } else {
         alert("Sin una API Key, las funciones de IA no estarán disponibles.");
     }
@@ -38,11 +46,11 @@ const modeloActual = document.getElementById("modelo-actual");
 const limpiarMemoria = document.getElementById("limpiar-memoria");
 const exportarDatos = document.getElementById("exportar-datos");
 const reiniciarVanta = document.getElementById("reiniciar-vanta");
-if (localStorage.getItem("VANTA SYSTEM_MODELO_VERSION") !== "3.5-flash-lite") {
-    localStorage.setItem("VANTA SYSTEM_MODELO", "gemini-3.5-flash-lite");
-    localStorage.setItem("VANTA SYSTEM_MODELO_VERSION", "3.5-flash-lite");
+if (perfilStorage.getItem("VANTA SYSTEM_MODELO_VERSION") !== "3.5-flash-lite") {
+    perfilStorage.setItem("VANTA SYSTEM_MODELO", "gemini-3.5-flash-lite");
+    perfilStorage.setItem("VANTA SYSTEM_MODELO_VERSION", "3.5-flash-lite");
 }
-let modeloGemini = localStorage.getItem("VANTA SYSTEM_MODELO") || "gemini-3.5-flash-lite";
+let modeloGemini = perfilStorage.getItem("VANTA SYSTEM_MODELO") || "gemini-3.5-flash-lite";
 if (modeloActual) modeloActual.textContent = modeloGemini.replace("gemini-", "").toUpperCase();
 if (modeloInput) modeloInput.value = modeloGemini;
 
@@ -219,7 +227,7 @@ cambiarModelo?.addEventListener("click", () => {
     const nuevo = (modeloInput?.value || "").trim().replace(/^models\//, "");
     if (!nuevo) { estado.textContent = "Estado: Escribí un modelo válido."; return; }
     modeloGemini = nuevo;
-    localStorage.setItem("VANTA SYSTEM_MODELO", modeloGemini);
+    perfilStorage.setItem("VANTA SYSTEM_MODELO", modeloGemini);
     if (modeloActual) modeloActual.textContent = modeloGemini.replace("gemini-", "").toUpperCase();
     estado.textContent = "Estado: Modelo guardado.";
 });
@@ -227,7 +235,7 @@ cambiarModelo?.addEventListener("click", () => {
 limpiarMemoria?.addEventListener("click", () => {
     if (!confirm("¿Borrar toda la memoria guardada?")) return;
     memoria = [];
-    localStorage.removeItem("VANTA SYSTEM_MEMORIA");
+    perfilStorage.removeItem("VANTA SYSTEM_MEMORIA");
     actualizarMemoriaUI();
     estado.textContent = "Estado: Memoria borrada.";
 });
@@ -245,10 +253,10 @@ exportarDatos?.addEventListener("click", () => {
 
 reiniciarVanta?.addEventListener("click", () => {
     if (!confirm("¿Reiniciar la configuración local de VANTA SYSTEM?")) return;
-    localStorage.removeItem("VANTA SYSTEM_CONTEXTO");
-    localStorage.removeItem("VANTA SYSTEM_MEMORIA");
-    localStorage.removeItem("VANTA SYSTEM_MODELO");
-    localStorage.removeItem("VANTA SYSTEM_MODELO_VERSION");
+    perfilStorage.removeItem("VANTA SYSTEM_CONTEXTO");
+    perfilStorage.removeItem("VANTA SYSTEM_MEMORIA");
+    perfilStorage.removeItem("VANTA SYSTEM_MODELO");
+    perfilStorage.removeItem("VANTA SYSTEM_MODELO_VERSION");
     location.reload();
 });
 
@@ -433,7 +441,7 @@ await preguntarGemini(texto);
 conversacion.push({ rol: "usuario", texto });
 conversacion.push({ rol: "vanta", texto: respuesta });
 conversacion = conversacion.slice(-12);
-localStorage.setItem("VANTA SYSTEM_CONTEXTO", JSON.stringify(conversacion));
+perfilStorage.setItem("VANTA SYSTEM_CONTEXTO", JSON.stringify(conversacion));
 
 hablar(respuesta);
 
@@ -506,8 +514,8 @@ document.getElementById("nav-profile")?.addEventListener("click", () => document
 // ======================================
 
 
-let memoria = JSON.parse(localStorage.getItem("VANTA SYSTEM_MEMORIA") || "[]");
-let conversacion = JSON.parse(localStorage.getItem("VANTA SYSTEM_CONTEXTO") || "[]");
+let memoria = JSON.parse(perfilStorage.getItem("VANTA SYSTEM_MEMORIA") || "[]");
+let conversacion = JSON.parse(perfilStorage.getItem("VANTA SYSTEM_CONTEXTO") || "[]");
 
 function actualizarMemoriaUI(){
     if (memoryStatus) memoryStatus.textContent = memoria.length ? memoria.length + " ITEMS" : "READY";
@@ -533,7 +541,7 @@ memoria.shift();
 
 }
 
-localStorage.setItem("VANTA SYSTEM_MEMORIA", JSON.stringify(memoria));
+perfilStorage.setItem("VANTA SYSTEM_MEMORIA", JSON.stringify(memoria));
 actualizarMemoriaUI();
 
 
@@ -775,3 +783,13 @@ estado.textContent =
 // ======================================
 // VANTA SYSTEM WEB AI COMPLETADO
 // ======================================
+
+
+const perfilActivoLabel = document.getElementById("perfil-activo");
+if (perfilActivoLabel) perfilActivoLabel.textContent = `VANTA DE ${perfilActivo.toUpperCase()}`;
+const profileGate = document.getElementById("profile-gate");
+if (!localStorage.getItem("VANTA_PERFIL")) profileGate?.classList.add("visible");
+document.querySelectorAll("[data-profile]").forEach(botonPerfil => botonPerfil.addEventListener("click", () => {
+    localStorage.setItem("VANTA_PERFIL", botonPerfil.dataset.profile);
+    location.reload();
+}));
