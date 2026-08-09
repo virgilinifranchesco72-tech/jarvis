@@ -483,6 +483,20 @@ function enviarTextoComoComando(){
 enviarComando?.addEventListener("click", enviarTextoComoComando);
 comandoTexto?.addEventListener("keydown", evento => { if (evento.key === "Enter") enviarTextoComoComando(); });
 
+document.querySelectorAll(".functions-grid [data-action]").forEach(botonFuncion => {
+    botonFuncion.addEventListener("click", () => {
+        const accion = botonFuncion.dataset.action;
+        if (accion === "hablar") boton?.click();
+        if (accion === "memoria") document.querySelector(".telemetry-grid")?.scrollIntoView({ behavior: "smooth" });
+        if (accion === "info") { if (comandoTexto) comandoTexto.value = "Jarvis, dame un informe del sistema"; comandoTexto?.focus(); }
+        if (accion === "alarmas") { estado.textContent = "Estado: Alertas locales listas."; hablar("No hay alertas pendientes, señor."); }
+        if (accion === "ajustes") document.querySelector(".control-panel")?.scrollIntoView({ behavior: "smooth" });
+    });
+});
+document.getElementById("nav-history")?.addEventListener("click", () => document.querySelector(".history-panel")?.scrollIntoView({ behavior: "smooth" }));
+document.getElementById("nav-command")?.addEventListener("click", () => comandoTexto?.focus());
+document.getElementById("nav-profile")?.addEventListener("click", () => document.querySelector(".control-panel")?.scrollIntoView({ behavior: "smooth" }));
+
 // FIN PARTE 3
 // ======================================
 
