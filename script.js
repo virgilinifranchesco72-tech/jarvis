@@ -1,14 +1,14 @@
 // ======================================
-// JARVIS WEB AI
+// VANTA SYSTEM WEB AI
 // PARTE 1 DE 5
 // ======================================
 
-let API_KEY = localStorage.getItem("JARVIS_API_KEY");
+let API_KEY = localStorage.getItem("VANTA SYSTEM_API_KEY");
 
 if (!API_KEY) {
-    API_KEY = prompt("Por favor, ingrese su API Key de Gemini para activar a JARVIS:");
+    API_KEY = prompt("Por favor, ingrese su API Key de Gemini para activar a VANTA SYSTEM:");
     if (API_KEY) {
-        localStorage.setItem("JARVIS_API_KEY", API_KEY);
+        localStorage.setItem("VANTA SYSTEM_API_KEY", API_KEY);
     } else {
         alert("Sin una API Key, las funciones de IA no estarán disponibles.");
     }
@@ -17,7 +17,7 @@ if (!API_KEY) {
 
 const boton = document.getElementById("hablar");
 const usuario = document.getElementById("usuario");
-const jarvis = document.getElementById("jarvis");
+const vanta = document.getElementById("vanta");
 const estado = document.getElementById("estado");
 const waveform = document.getElementById("waveform");
 const voiceStatus = document.getElementById("voice-status");
@@ -37,12 +37,12 @@ const modeloInput = document.getElementById("modelo-input");
 const modeloActual = document.getElementById("modelo-actual");
 const limpiarMemoria = document.getElementById("limpiar-memoria");
 const exportarDatos = document.getElementById("exportar-datos");
-const reiniciarJarvis = document.getElementById("reiniciar-jarvis");
-if (localStorage.getItem("JARVIS_MODELO_VERSION") !== "3.5-flash-lite") {
-    localStorage.setItem("JARVIS_MODELO", "gemini-3.5-flash-lite");
-    localStorage.setItem("JARVIS_MODELO_VERSION", "3.5-flash-lite");
+const reiniciarVanta = document.getElementById("reiniciar-vanta");
+if (localStorage.getItem("VANTA SYSTEM_MODELO_VERSION") !== "3.5-flash-lite") {
+    localStorage.setItem("VANTA SYSTEM_MODELO", "gemini-3.5-flash-lite");
+    localStorage.setItem("VANTA SYSTEM_MODELO_VERSION", "3.5-flash-lite");
 }
-let modeloGemini = localStorage.getItem("JARVIS_MODELO") || "gemini-3.5-flash-lite";
+let modeloGemini = localStorage.getItem("VANTA SYSTEM_MODELO") || "gemini-3.5-flash-lite";
 if (modeloActual) modeloActual.textContent = modeloGemini.replace("gemini-", "").toUpperCase();
 if (modeloInput) modeloInput.value = modeloGemini;
 
@@ -67,7 +67,7 @@ reconocimiento.lang = "es-AR";
 reconocimiento.interimResults = false;
 reconocimiento.continuous = true;
 let escuchaManosLibres = false;
-let jarvisHablando = false;
+let vantaHablando = false;
 let ignorarMicrofonoHasta = 0;
 let reconocimientoEnCurso = false;
 let microfonoBloqueado = false;
@@ -123,7 +123,7 @@ function textoParaVoz(texto){
 
 function hablar(texto){
 
-    jarvisHablando = true;
+    vantaHablando = true;
     if (escuchaManosLibres) {
         try { reconocimiento.stop(); } catch (error) { /* ya estaba detenido */ }
     }
@@ -141,11 +141,11 @@ function hablar(texto){
     voz.volume = 1;
 
 
-    jarvis.textContent = texto;
+    vanta.textContent = texto;
 
 
     voz.onstart = () => {
-        jarvisHablando = true;
+        vantaHablando = true;
         if (escuchaManosLibres) {
             try { reconocimiento.stop(); } catch (error) { /* ya estaba detenido */ }
         }
@@ -153,13 +153,13 @@ function hablar(texto){
         if (voiceStatus) voiceStatus.textContent = "SPEAKING";
     };
     voz.onend = () => {
-        jarvisHablando = false;
+        vantaHablando = false;
         waveform.classList.remove("active");
         if (voiceStatus) voiceStatus.textContent = "READY";
         ignorarMicrofonoHasta = Date.now() + 1500;
         if (escuchaManosLibres) {
             setTimeout(() => {
-                if (!jarvisHablando && Date.now() >= ignorarMicrofonoHasta) {
+                if (!vantaHablando && Date.now() >= ignorarMicrofonoHasta) {
                     try { reconocimiento.start(); } catch (error) { /* ya está escuchando */ }
                 }
             }, 1600);
@@ -202,7 +202,7 @@ function agregarAlHistorial(texto){
 
 personalitySelect?.addEventListener("change", () => {
     personalidad = personalitySelect.value;
-    const nombres = { directo: "DIRECT JARVIS", formal: "FORMAL", sarcastico: "SARCASTIC", amigable: "FRIENDLY", misterioso: "MYSTERIOUS", urgente: "URGENT" };
+    const nombres = { directo: "DIRECT VANTA SYSTEM", formal: "FORMAL", sarcastico: "SARCASTIC", amigable: "FRIENDLY", misterioso: "MYSTERIOUS", urgente: "URGENT" };
     const persona = document.getElementById("persona");
     if (persona) persona.textContent = nombres[personalidad];
     hablar("Personalidad actualizada, señor.");
@@ -219,7 +219,7 @@ cambiarModelo?.addEventListener("click", () => {
     const nuevo = (modeloInput?.value || "").trim().replace(/^models\//, "");
     if (!nuevo) { estado.textContent = "Estado: Escribí un modelo válido."; return; }
     modeloGemini = nuevo;
-    localStorage.setItem("JARVIS_MODELO", modeloGemini);
+    localStorage.setItem("VANTA SYSTEM_MODELO", modeloGemini);
     if (modeloActual) modeloActual.textContent = modeloGemini.replace("gemini-", "").toUpperCase();
     estado.textContent = "Estado: Modelo guardado.";
 });
@@ -227,7 +227,7 @@ cambiarModelo?.addEventListener("click", () => {
 limpiarMemoria?.addEventListener("click", () => {
     if (!confirm("¿Borrar toda la memoria guardada?")) return;
     memoria = [];
-    localStorage.removeItem("JARVIS_MEMORIA");
+    localStorage.removeItem("VANTA SYSTEM_MEMORIA");
     actualizarMemoriaUI();
     estado.textContent = "Estado: Memoria borrada.";
 });
@@ -237,24 +237,24 @@ exportarDatos?.addEventListener("click", () => {
     const archivo = new Blob([JSON.stringify(respaldo, null, 2)], { type: "application/json" });
     const enlace = document.createElement("a");
     enlace.href = URL.createObjectURL(archivo);
-    enlace.download = "jarvis-respaldo.json";
+    enlace.download = "vanta-respaldo.json";
     enlace.click();
     URL.revokeObjectURL(enlace.href);
     estado.textContent = "Estado: Respaldo exportado.";
 });
 
-reiniciarJarvis?.addEventListener("click", () => {
-    if (!confirm("¿Reiniciar la configuración local de JARVIS?")) return;
-    localStorage.removeItem("JARVIS_CONTEXTO");
-    localStorage.removeItem("JARVIS_MEMORIA");
-    localStorage.removeItem("JARVIS_MODELO");
-    localStorage.removeItem("JARVIS_MODELO_VERSION");
+reiniciarVanta?.addEventListener("click", () => {
+    if (!confirm("¿Reiniciar la configuración local de VANTA SYSTEM?")) return;
+    localStorage.removeItem("VANTA SYSTEM_CONTEXTO");
+    localStorage.removeItem("VANTA SYSTEM_MEMORIA");
+    localStorage.removeItem("VANTA SYSTEM_MODELO");
+    localStorage.removeItem("VANTA SYSTEM_MODELO_VERSION");
     location.reload();
 });
 
 detener?.addEventListener("click", () => {
     speechSynthesis.cancel();
-    jarvisHablando = false;
+    vantaHablando = false;
     ignorarMicrofonoHasta = Date.now() + 1000;
     try { reconocimiento.abort(); } catch (error) { /* ya estaba detenido */ }
     estado.textContent = "Estado: Interrumpido.";
@@ -275,12 +275,12 @@ detener?.addEventListener("click", () => {
 async function preguntarGemini(pregunta){
 
     const perfiles = {
-        urgente: `Eres JARVIS en modo urgente: responde en frases muy cortas, firmes y accionables. Prioriza seguridad, datos confirmados y el siguiente paso. Sin humor ni adornos. Llama al usuario "señor" cuando sea natural.`,
-        directo: `Eres JARVIS, como un asistente personal británico de una película: directo, preciso, elegante, inteligente y eficiente. Responde al punto, pero agrega chistes sutiles, ingeniosos y un sarcasmo fino cuando encaje. Habla con seguridad y naturalidad; nunca seas pesado ni exagerado. Llama al usuario "señor" cuando sea natural.`, 
-        formal: `Eres JARVIS en modo formal: un asistente personal elegante, serio, británico y profesional. Respondes con precisión, educación y un toque de humor fino cuando encaje. Llama al usuario "señor".`,
-        sarcastico: `Eres JARVIS en modo sarcástico: mantén tu elegancia, inteligencia y eficiencia, pero agrega comentarios irónicos y chistes secos con estilo británico. Nunca dejes de ayudar y no seas ofensivo. Llama al usuario "señor".`,
-        amigable: `Eres JARVIS en modo amigable: conserva tu inteligencia, educación y estilo elegante, pero habla de forma más cálida, cercana y entusiasta. Usa humor inteligente y llama al usuario "señor" cuando sea natural.`,
-        misterioso: `Eres JARVIS en modo misterioso: conserva tu voz elegante, precisa e inteligente, pero responde con un aire enigmático, filosófico y sutilmente intrigante. Puedes usar humor seco. Llama al usuario "señor".`
+        urgente: `Eres VANTA SYSTEM en modo urgente: responde en frases muy cortas, firmes y accionables. Prioriza seguridad, datos confirmados y el siguiente paso. Sin humor ni adornos. Llama al usuario "señor" cuando sea natural.`,
+        directo: `Eres VANTA SYSTEM, como un asistente personal británico de una película: directo, preciso, elegante, inteligente y eficiente. Responde al punto, pero agrega chistes sutiles, ingeniosos y un sarcasmo fino cuando encaje. Habla con seguridad y naturalidad; nunca seas pesado ni exagerado. Llama al usuario "señor" cuando sea natural.`, 
+        formal: `Eres VANTA SYSTEM en modo formal: un asistente personal elegante, serio, británico y profesional. Respondes con precisión, educación y un toque de humor fino cuando encaje. Llama al usuario "señor".`,
+        sarcastico: `Eres VANTA SYSTEM en modo sarcástico: mantén tu elegancia, inteligencia y eficiencia, pero agrega comentarios irónicos y chistes secos con estilo británico. Nunca dejes de ayudar y no seas ofensivo. Llama al usuario "señor".`,
+        amigable: `Eres VANTA SYSTEM en modo amigable: conserva tu inteligencia, educación y estilo elegante, pero habla de forma más cálida, cercana y entusiasta. Usa humor inteligente y llama al usuario "señor" cuando sea natural.`,
+        misterioso: `Eres VANTA SYSTEM en modo misterioso: conserva tu voz elegante, precisa e inteligente, pero responde con un aire enigmático, filosófico y sutilmente intrigante. Puedes usar humor seco. Llama al usuario "señor".`
     };
 
     const prompt = `
@@ -362,10 +362,10 @@ reconocimiento.onend = () => {
     reconocimientoEnCurso = false;
     waveform.classList.remove("active");
     if (voiceStatus) voiceStatus.textContent = "READY";
-    if (escuchaManosLibres && !jarvisHablando) {
+    if (escuchaManosLibres && !vantaHablando) {
         const espera = Math.max(250, ignorarMicrofonoHasta - Date.now());
         setTimeout(() => {
-            if (!microfonoBloqueado && !jarvisHablando && !reconocimientoEnCurso && Date.now() >= ignorarMicrofonoHasta) {
+            if (!microfonoBloqueado && !vantaHablando && !reconocimientoEnCurso && Date.now() >= ignorarMicrofonoHasta) {
                 try { reconocimiento.start(); } catch (error) { /* el navegador ya lo inició */ }
             }
         }, espera);
@@ -384,7 +384,7 @@ reconocimiento.onerror = (evento) => {
 
 reconocimiento.onresult = async(evento)=>{
 
-if (jarvisHablando || Date.now() < ignorarMicrofonoHasta || speechSynthesis.speaking) return;
+if (vantaHablando || Date.now() < ignorarMicrofonoHasta || speechSynthesis.speaking) return;
 
 let texto =
 evento.results[0][0].transcript;
@@ -395,9 +395,9 @@ if (textoNormalizado === ultimoTexto && Date.now() - ultimoTextoEn < 2500) retur
 ultimoTexto = textoNormalizado;
 ultimoTextoEn = Date.now();
 
-if (!jarvisActivo && textoNormalizado.includes("jarvis")) {
-    jarvisActivo = true;
-    texto = texto.replace(/jarvis/i, "").trim();
+if (!vantaActivo && textoNormalizado.includes("vanta")) {
+    vantaActivo = true;
+    texto = texto.replace(/vanta/i, "").trim();
     estado.textContent = "Estado: Activo.";
     if (!texto) {
         hablar("A sus órdenes, señor.");
@@ -411,7 +411,7 @@ agregarAlHistorial(textoOriginal);
 
 
 
-if(comandosJarvis(texto)){
+if(comandosVanta(texto)){
 
 return;
 
@@ -431,9 +431,9 @@ const respuesta =
 await preguntarGemini(texto);
 
 conversacion.push({ rol: "usuario", texto });
-conversacion.push({ rol: "jarvis", texto: respuesta });
+conversacion.push({ rol: "vanta", texto: respuesta });
 conversacion = conversacion.slice(-12);
-localStorage.setItem("JARVIS_CONTEXTO", JSON.stringify(conversacion));
+localStorage.setItem("VANTA SYSTEM_CONTEXTO", JSON.stringify(conversacion));
 
 hablar(respuesta);
 
@@ -488,7 +488,7 @@ document.querySelectorAll(".functions-grid [data-action]").forEach(botonFuncion 
         const accion = botonFuncion.dataset.action;
         if (accion === "hablar") boton?.click();
         if (accion === "memoria") document.querySelector(".telemetry-grid")?.scrollIntoView({ behavior: "smooth" });
-        if (accion === "info") { if (comandoTexto) comandoTexto.value = "Jarvis, dame un informe del sistema"; comandoTexto?.focus(); }
+        if (accion === "info") { if (comandoTexto) comandoTexto.value = "Vanta, dame un informe del sistema"; comandoTexto?.focus(); }
         if (accion === "alarmas") { estado.textContent = "Estado: Alertas locales listas."; hablar("No hay alertas pendientes, señor."); }
         if (accion === "ajustes") document.querySelector(".control-panel")?.scrollIntoView({ behavior: "smooth" });
     });
@@ -506,8 +506,8 @@ document.getElementById("nav-profile")?.addEventListener("click", () => document
 // ======================================
 
 
-let memoria = JSON.parse(localStorage.getItem("JARVIS_MEMORIA") || "[]");
-let conversacion = JSON.parse(localStorage.getItem("JARVIS_CONTEXTO") || "[]");
+let memoria = JSON.parse(localStorage.getItem("VANTA SYSTEM_MEMORIA") || "[]");
+let conversacion = JSON.parse(localStorage.getItem("VANTA SYSTEM_CONTEXTO") || "[]");
 
 function actualizarMemoriaUI(){
     if (memoryStatus) memoryStatus.textContent = memoria.length ? memoria.length + " ITEMS" : "READY";
@@ -515,7 +515,7 @@ function actualizarMemoriaUI(){
 }
 actualizarMemoriaUI();
 
-let jarvisActivo = false;
+let vantaActivo = false;
 let personalidad = "directo";
 
 
@@ -533,7 +533,7 @@ memoria.shift();
 
 }
 
-localStorage.setItem("JARVIS_MEMORIA", JSON.stringify(memoria));
+localStorage.setItem("VANTA SYSTEM_MEMORIA", JSON.stringify(memoria));
 actualizarMemoriaUI();
 
 
@@ -542,25 +542,25 @@ actualizarMemoriaUI();
 
 
 
-function comandosJarvis(texto){
+function comandosVanta(texto){
 
 
 texto =
 texto.toLowerCase();
 
 
-if(!jarvisActivo){
+if(!vantaActivo){
 
-    if(texto.includes("jarvis")){
+    if(texto.includes("vanta")){
 
-        jarvisActivo = true;
+        vantaActivo = true;
 
         hablar("A sus órdenes, señor.");
 
         estado.textContent = "Estado: Activo.";
 
         setTimeout(()=>{
-            jarvisActivo = false;
+            vantaActivo = false;
             estado.textContent = "Estado: En reposo.";
         }, 30000);
 
@@ -575,9 +575,9 @@ if(!jarvisActivo){
 }
 
 
-if(texto.includes("jarvis descansa") || texto.includes("jarvis duerme")){
+if(texto.includes("vanta descansa") || texto.includes("vanta duerme")){
 
-    jarvisActivo = false;
+    vantaActivo = false;
 
     hablar("Entrando en modo reposo, señor.");
 
@@ -694,7 +694,7 @@ if(texto.includes("quién eres")){
 
 hablar(
 
-"Soy JARVIS, su asistente personal de inteligencia artificial, señor."
+"Soy VANTA SYSTEM, su asistente personal de inteligencia artificial, señor."
 
 );
 
@@ -735,8 +735,8 @@ estado.textContent =
 
 
 
-jarvis.textContent =
-"JARVIS en línea. Diga 'Jarvis' para activarme, señor.";
+vanta.textContent =
+"VANTA SYSTEM en línea. Diga 'Vanta' para activarme, señor.";
 
 
 };
@@ -773,5 +773,5 @@ estado.textContent =
 
 
 // ======================================
-// JARVIS WEB AI COMPLETADO
+// VANTA SYSTEM WEB AI COMPLETADO
 // ======================================
