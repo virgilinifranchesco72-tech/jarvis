@@ -1,4 +1,4 @@
-const CACHE = "jarvis-shell-v7";
+const CACHE = "jarvis-shell-v8";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -6,8 +6,8 @@ const APP_SHELL = [
   "./pwa-overrides.css?v=1",
   "./script.js?v=11",
   "./manifest.json",
-  "./icons/jarvis-192.png",
-  "./icons/jarvis-512.png"
+  "./icons/jarvis-192.png?v=2",
+  "./icons/jarvis-512.png?v=2"
 ];
 
 self.addEventListener("install", event => {
