@@ -31,6 +31,14 @@
             <div class="core-label"><b id="estado">Estado: Esperando...</b><span>VOICE INTERFACE READY</span></div>
         </section>
 
+        <section class="functions-grid">
+            <button data-action="hablar">◒<small>HABLAR</small></button>
+            <button data-action="memoria">▣<small>MEMORIA</small></button>
+            <button data-action="info">◎<small>INFORMACIÓN</small></button>
+            <button data-action="alarmas">◷<small>ALARMAS</small></button>
+            <button data-action="ajustes">⚙<small>AJUSTES</small></button>
+        </section>
+
         <section class="telemetry-grid">
             <article class="hud-card"><div class="card-title"><span class="tiny-icon">◈</span> PERSONALIDAD</div><strong id="persona">DIRECT JARVIS</strong><div class="meter"><i style="width:82%"></i></div><small>NEURAL PROFILE ACTIVE</small></article>
             <article class="hud-card"><div class="card-title"><span class="tiny-icon">◉</span> ESTADO DE VOZ</div><strong id="voice-status">READY</strong><div class="meter"><i style="width:100%"></i></div><small>VOICE SYNTHESIS ONLINE</small></article>
@@ -72,9 +80,10 @@
         <button id="detener" class="stop-button" aria-label="Detener a Jarvis">■ DETENER RESPUESTA</button>
         <div class="text-command"><input id="comando-texto" type="text" placeholder="Escribí un comando si el micrófono no responde"><button id="enviar-comando">ENVIAR</button></div>
 
+        <nav class="bottom-nav"><button>⌂<small>INICIO</small></button><button id="nav-history">◷<small>HISTORIAL</small></button><button id="nav-command">▣<small>COMANDOS</small></button><button id="nav-profile">♙<small>PERFIL</small></button></nav>
         <footer><span>SECURE LOCAL SESSION</span><span>◆</span><span>BUENOS AIRES, AR</span></footer>
     </main>
-    <script src="script.js?v=10"></script>
+    <script src="script.js?v=11"></script>
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
