@@ -1,102 +1,26 @@
-<!DOCTYPE html>
-<html lang="es">
+<!doctype html>
+<html lang="es-AR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#030812">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="VANTA SYSTEM">
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icons/jarvis-192.png">
-    <title>VANTA SYSTEM // COMMAND CENTER</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="pwa-overrides.css?v=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07111f"><meta name="description" content="VANTA SYSTEM · centro de mando local">
+<link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icons/jarvis-192.png"><link rel="stylesheet" href="style.css">
+<title>VANTA SYSTEM · COMMAND CENTER</title>
 </head>
 <body>
-    <section id="profile-gate" class="profile-gate">
-      <div class="profile-card">
-        <div class="profile-orb">V</div>
-        <h1>VANTA SYSTEM</h1>
-        <p>Elegí tu perfil para cargar tu VANTA personal.</p>
-        <button data-profile="Fran">ENTRAR COMO FRAN</button>
-        <button data-profile="Angélica">ENTRAR COMO ANGÉLICA</button>
-      </div>
-    </section>
-    <main class="app-shell">
-        <header class="topbar">
-            <div class="brand"><span class="brand-mark">✦</span><div><strong>VANTA SYSTEM</strong><small id="perfil-activo">PERSONAL AI</small></div></div>
-            <div class="system-state"><span class="status-dot"></span><span id="connection">ONLINE</span></div>
-        </header>
-
-        <section class="hero-panel">
-            <div class="hero-meta"><span>CORE SYSTEM</span><span>v2.0.26</span></div>
-            <div class="core-stage" id="core-stage">
-                <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="orbit orbit-three"></div>
-                <div id="core"><span class="core-symbol">J</span><span class="core-ring"></span></div>
-                <div class="scan-line"></div>
-            </div>
-            <div class="core-label"><b id="estado">Estado: Esperando...</b><span>VOICE INTERFACE READY</span></div>
-        </section>
-
-        <section class="functions-grid">
-            <button data-action="hablar">◒<small>HABLAR</small></button>
-            <button data-action="memoria">▣<small>MEMORIA</small></button>
-            <button data-action="info">◎<small>INFORMACIÓN</small></button>
-            <button data-action="alarmas">◷<small>ALARMAS</small></button>
-            <button data-action="ajustes">⚙<small>AJUSTES</small></button>
-        </section>
-
-        <section class="telemetry-grid">
-            <article class="hud-card"><div class="card-title"><span class="tiny-icon">◈</span> PERSONALIDAD</div><strong id="persona">DIRECT VANTA SYSTEM</strong><div class="meter"><i style="width:82%"></i></div><small>NEURAL PROFILE ACTIVE</small></article>
-            <article class="hud-card"><div class="card-title"><span class="tiny-icon">◉</span> ESTADO DE VOZ</div><strong id="voice-status">READY</strong><div class="meter"><i style="width:100%"></i></div><small>VOICE SYNTHESIS ONLINE</small></article>
-            <article class="hud-card"><div class="card-title"><span class="tiny-icon">◆</span> MEMORIA</div><strong id="memory-status">READY</strong><div class="meter"><i id="memory-meter" style="width:0%"></i></div><small>PERSISTENT LOCAL MEMORY</small></article>
-            <article class="hud-card"><div class="card-title"><span class="tiny-icon">◇</span> SEGURIDAD</div><strong>SECURE</strong><div class="meter"><i style="width:100%"></i></div><small>API KEY NOT STORED ONLINE</small></article>
-        </section>
-
-        <section class="control-panel">
-            <div class="control-heading"><span>VANTA SYSTEM CONTROLS</span><span class="live-pill">CONFIG</span></div>
-            <div class="control-row">
-                <label>PERSONALIDAD<select id="personality-select"><option value="directo" selected>VANTA SYSTEM real / Directo</option><option value="formal">Formal</option><option value="sarcastico">Sarcástico</option><option value="amigable">Amigable</option><option value="misterioso">Misterioso</option><option value="urgente">Modo urgente</option></select></label>
-                <label>VELOCIDAD<input id="voice-rate" type="range" min="0.7" max="1.2" step="0.01" value="0.94"><output id="rate-value">0.94</output></label>
-            </div>
-            <div class="control-row second-row">
-                <label>TONO<input id="voice-pitch" type="range" min="0.7" max="1.3" step="0.01" value="1.02"><output id="pitch-value">1.02</output></label>
-                <button id="clear-history" class="mini-button">LIMPIAR HISTORIAL</button>
-                <div class="model-control"><span>MODELO</span><input id="modelo-input" value="gemini-3.5-flash-lite" spellcheck="false"><button id="cambiar-modelo" class="mini-button">GUARDAR</button></div>
-                <button id="limpiar-memoria" class="mini-button">BORRAR MEMORIA</button>
-                <button id="exportar-datos" class="mini-button">EXPORTAR DATOS</button>
-                <button id="reiniciar-vanta" class="mini-button">REINICIAR VANTA SYSTEM</button>
-            </div>
-        </section>
-
-        <section class="history-panel">
-            <div class="chat-head"><span>COMMAND HISTORY</span><span id="history-count">0 COMMANDS</span></div>
-            <ul id="history-list"><li class="empty-history">Todavía no hay comandos.</li></ul>
-        </section>
-
-        <section class="chat-panel">
-            <div class="chat-head"><span>LIVE TRANSCRIPT</span><span class="live-pill">● LIVE</span></div>
-            <div class="message user-message"><span class="message-tag">YOU</span><p id="usuario">Esperando comando...</p></div>
-            <div class="message vanta-message"><span class="message-tag">VANTA SYSTEM</span><p id="vanta">Sistema en línea. Diga “Vanta” para activarme.</p></div>
-        </section>
-
-        <div class="waveform" id="waveform" aria-hidden="true">
-            <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-        </div>
-        <button id="hablar" class="voice-button" aria-label="Hablar con Vanta"><span class="mic-icon">♩</span><span>TAP TO SPEAK</span><i></i></button>
-        <button id="detener" class="stop-button" aria-label="Detener a Vanta">■ DETENER RESPUESTA</button>
-        <div class="text-command"><input id="comando-texto" type="text" placeholder="Escribí un comando si el micrófono no responde"><button id="enviar-comando">ENVIAR</button></div>
-
-        <nav class="bottom-nav"><button>⌂<small>INICIO</small></button><button id="nav-history">◷<small>HISTORIAL</small></button><button id="nav-command">▣<small>COMANDOS</small></button><button id="nav-profile">♙<small>PERFIL</small></button></nav>
-        <footer><span>SECURE LOCAL SESSION</span><span>◆</span><span>BUENOS AIRES, AR</span></footer>
-    </main>
-    <script src="script.js?v=12"></script>
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
-      }
-    </script>
-</body>
-</html>
+<div class="noise" aria-hidden="true"></div>
+<section id="onboarding" class="overlay" aria-labelledby="welcome-title">
+ <div class="onboard-card"><div class="eyebrow">// IDENTITY PROTOCOL</div><div class="logo-orb">V</div><h1 id="welcome-title">VANTA<br><em>SYSTEM</em></h1><p>Tu centro de mando privado, local y preparado para funcionar sin conexión.</p><div class="profile-choice"><button data-profile="Fran"><b>FRAN</b><small>OPERADOR PRINCIPAL</small></button><button data-profile="Angélica"><b>ANGÉLICA</b><small>PERFIL PERSONAL</small></button></div><small class="privacy-note">Tus datos quedan separados por perfil en este dispositivo.</small></div>
+</section>
+<main id="app" class="app" hidden>
+<header class="topbar"><a class="brand" href="#top" aria-label="VANTA SYSTEM inicio"><span class="brand-symbol">✦</span><span><b>VANTA SYSTEM</b><small>LOCAL COMMAND CENTER</small></span></a><div class="top-actions"><span class="connection"><i></i><span id="connection-label">OFFLINE READY</span></span><button id="profile-button" class="icon-button" aria-label="Cambiar perfil">FR</button></div></header>
+<section class="status-strip" aria-live="polite"><span class="pulse-dot"></span><strong id="status">SISTEMA EN REPOSO</strong><span id="status-detail">Canal local seguro · sin claves expuestas</span></section>
+<section class="hero" id="top"><div class="hero-copy"><div class="eyebrow">// VANTA CORE / <span id="clock">00:00:00</span></div><h2>¿Qué vamos a<br><em>resolver?</em></h2><p>Comandos locales, memoria privada y una interfaz que no necesita fingir que está online.</p></div><div class="core-stage" aria-label="Núcleo Vanta en reposo"><div class="orbit orbit-a"></div><div class="orbit orbit-b"></div><div class="core"><span>V</span></div></div></section>
+<section class="command-zone" aria-labelledby="command-title"><div class="section-label"><span id="command-title">COMMAND DECK</span><kbd>⌘ K</kbd></div><div class="command-input"><span class="prompt">›</span><input id="command" autocomplete="off" placeholder="Escribí: ‘recordá que…’, ‘informe’, ‘ayuda’" aria-label="Comando para Vanta"><button id="send" aria-label="Enviar comando">↗</button></div><div class="quick-actions"><button data-command="informe del sistema">INFORME</button><button data-command="qué recordás">MEMORIA</button><button data-command="ayuda">AYUDA</button><button data-command="modo sarcástico">PERSONALIDAD</button></div></section>
+<section class="transcript panel"><div class="panel-head"><span>LIVE TRANSCRIPT</span><span class="badge" id="voice-status">VOICE READY</span></div><div class="message user"><span>YOU / <time id="last-time">—</time></span><p id="user-message">Esperando un comando…</p></div><div class="message vanta"><span>VANTA SYSTEM</span><p id="vanta-message">A sus órdenes. El núcleo local está operativo.</p></div><div class="waveform" id="waveform" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></section>
+<div class="voice-actions"><button id="speak" class="primary-button"><span>◉</span> HABLAR</button><button id="stop" class="secondary-button">■ DETENER</button></div>
+<section class="metrics"><article class="metric"><span>PROFILE</span><b id="active-profile">—</b><small id="profile-role">IDENTITY LOCKED</small></article><article class="metric"><span>MEMORY</span><b id="memory-count">0</b><small>LOCAL ENTRIES</small></article><article class="metric"><span>SESSION</span><b id="session-count">0</b><small>COMMANDS</small></article><article class="metric"><span>MODEL</span><b id="model-label">LOCAL</b><small>NO API KEY STORED</small></article></section>
+<section class="panel history"><div class="panel-head"><span>COMMAND HISTORY</span><div><button id="export" class="text-button">EXPORTAR</button><button id="clear-history" class="text-button danger">LIMPIAR</button></div></div><ol id="history-list"><li class="empty">No hay comandos todavía.</li></ol></section>
+<section class="panel settings"><div class="panel-head"><span>SYSTEM CONFIG</span><span class="badge">PRIVATE</span></div><div class="settings-grid"><label>PERSONALIDAD<select id="personality"><option value="directo">Directo · Jarvis</option><option value="amigable">Amigable</option><option value="formal">Formal</option><option value="sarcastico">Sarcástico</option><option value="misterioso">Misterioso</option></select></label><label>MODELO LOCAL<input id="model" value="local-fallback" spellcheck="false"></label><label>VELOCIDAD<input id="rate" type="range" min="0.7" max="1.3" step=".05" value=".95"><output id="rate-output">0.95</output></label><label>TONO<input id="pitch" type="range" min=".7" max="1.3" step=".05" value="1"><output id="pitch-output">1.00</output></label></div><p class="security-callout">🔒 <b>Configuración segura:</b> esta interfaz nunca guarda ni incluye API keys. Para conectar un proveedor en un entorno local, configurá la variable o proxy en tu servidor de desarrollo; no la pegues en este repositorio.</p><div class="settings-actions"><button id="import" class="secondary-button">IMPORTAR DATOS</button><button id="clear-memory" class="secondary-button">BORRAR MEMORIA</button><button id="reset" class="secondary-button danger-border">REINICIAR PERFIL</button><input id="file-input" type="file" accept="application/json" hidden></div></section>
+<footer><span>VANTA SYSTEM / BUILD 30X</span><span>BUENOS AIRES · AR</span></footer>
+</main><script src="script.js" defer></script>
+</body></html>
